@@ -1,0 +1,44 @@
+GET http://localhost:5000/api/players
+
+###
+GET http://localhost:5000/api/players/5
+
+###
+POST http://localhost:5000/api/players
+Content-Type: application/json
+
+{
+    "name":"Frank Ribery",
+    "age":30,
+    "nat":"FRA",
+    "position":"Volante",
+    "height":178,
+    "weight":73,
+    "pac":20,
+    "tec":18,
+    "dri":20,
+    "fin":19,
+    "pas":16
+}
+
+###
+PUT http://localhost:5000/api/players/6
+Content-Type: application/json
+
+{
+    "id": 6,
+    "name":"Sergio Agüero",
+    "age":30,
+    "nat":"FRA",
+    "position":"Volante",
+    "height":178,
+    "weight":73,
+    "pac":20,
+    "tec":18,
+    "dri":20,
+    "fin":19,
+    "pas":16
+}
+
+###
+DELETE http://localhost:5000/api/players/6
