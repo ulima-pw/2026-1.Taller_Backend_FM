@@ -25,5 +25,6 @@ model Player {
   dri Int
   fin Int
   pas Int
+  club String?   
   active Boolean @default(true)
 }
