@@ -14,7 +14,7 @@ Content-Type: application/json
     "position":"Volante",
     "height":178,
     "weight":73,
-    "pac":20,
+    "pace":20,
     "tec":18,
     "dri":20,
     "fin":19,
