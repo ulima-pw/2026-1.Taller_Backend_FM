@@ -46,6 +46,9 @@ app.get("/api/players", async (req, resp) => {
     const players = await prisma.player.findMany({
         where : {
             active : true
+        },
+        include : {
+            attributes : true
         }
     })
     resp.json(players)
@@ -64,6 +67,9 @@ app.get("/api/players/:id", async (req, resp) => {
     const player =  await prisma.player.findUnique({
         where : {
             id : parseInt(id)
+        },
+        include : {
+            attributes : true
         }
     })
 
@@ -84,7 +90,25 @@ app.post("/api/players", async (req, resp) => {
     if (object) {
         try {
             const player = await prisma.player.create({
-                data : object
+                data : {
+                    name : object.name,
+                    age : object.age,
+                    nat : object.nat,
+                    position : object.position,
+                    height : object.height,
+                    weight : object.weight,
+                    club : object.club 
+                }
+            })
+            await prisma.playerAttributes.create({
+                data : {
+                    pac : object.pac,
+                    tec : object.tec,
+                    dri : object.dri,
+                    fin : object.fin,
+                    pas : object.pas,
+                    playerId : player.id
+                }
             })
             resp.json(player)
         }catch(e){
@@ -106,15 +130,39 @@ app.put("/api/players/:id", async (req, resp) => {
 
     if (object) {
         try {
-            const player = await prisma.player.upsert({
+            console.log(object)
+            const player = await prisma.player.update({
                 where : {
-                    id : id
-                }, data : object
+                    id : parseInt(id)
+                }, data : {
+                    name : object.name,
+                    age : object.age,
+                    nat : object.nat,
+                    position : object.position,
+                    height : object.height,
+                    weight : object.weight
+                }
+            })
+
+            console.log(player)
+
+            await prisma.playerAttributes.update({
+                where : {
+                    playerId : parseInt(id)
+                }, data : {
+                    pac : object.pac,
+                    tec : object.tec,
+                    dri : object.dri,
+                    fin : object.fin,
+                    pas : object.pas
+                }
             })
             return resp.status(200).json(player)
         }catch(e){
+
+
             return resp.status(400).json({
-                error : e
+                error : e.message
             })
         }
     } else {
@@ -127,17 +175,23 @@ app.delete("/api/players/:id", async (req, resp) => {
     const id = req.params.id;
 
     try {
-        await prisma.player.delete({
+        await prisma.playerAttributes.delete({
             where : {
-                id : id
+                playerId : parseInt(id)
             }
         })
+        await prisma.player.delete({
+            where : {
+                id : parseInt(id)
+            }
+        })
+        
         return resp.json({
             msg : "OK"
         })
     }catch (e) {
         return resp.status(400).json({
-            error : "Id incorrecto"
+            error : e.message
         })
     }
 })

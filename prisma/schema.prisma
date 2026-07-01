@@ -20,11 +20,18 @@ model Player {
   position String
   height Int
   weight Int
+  club String?   
+  active Boolean @default(true)
+  attributes PlayerAttributes?
+}
+
+model PlayerAttributes {
+  id Int @id @default(autoincrement())
   pac Int
   tec Int
   dri Int
   fin Int
   pas Int
-  club String?   
-  active Boolean @default(true)
+  playerId Int @unique
+  player Player @relation(fields: [playerId], references: [id])
 }
