@@ -3,6 +3,7 @@ import bodyParser from "body-parser"
 import { PrismaClient } from "./generated/prisma/index.js"
 import { Pool } from "pg"
 import { PrismaPg } from "@prisma/adapter-pg"
+import 'dotenv/config'
 
 const app = express()
 const PORT = 5000
@@ -31,7 +32,7 @@ let nextId = 7;
 
 
 
-
+console.log("DB_URL", process.env["DATABASE_URL"])
 
 
 const pool = new Pool({
@@ -99,29 +100,45 @@ app.post("/api/players", async (req, resp) => {
 })
 
 // PUT /api/players
-app.put("/api/players/:id", (req, resp) => {
+app.put("/api/players/:id", async (req, resp) => {
     const object = req.body;
     const id = req.params.id;
-    const index = jugadores.findIndex(x => id == x.id);
 
-    if (index > -1 && object) {
-        jugadores[index] = object;
-        return resp.status(200).json(object);
+    if (object) {
+        try {
+            const player = await prisma.player.upsert({
+                where : {
+                    id : id
+                }, data : object
+            })
+            return resp.status(200).json(player)
+        }catch(e){
+            return resp.status(400).json({
+                error : e
+            })
+        }
     } else {
-        return resp.status(500).json({ error: "No se ha podido modificar al jugador." })
+        return resp.status(500).json({ error: "No se ha podido crear al jugador." });
     }
 })
 
 // DELETE /api/players
-app.delete("/api/players/:id", (req, resp) => {
+app.delete("/api/players/:id", async (req, resp) => {
     const id = req.params.id;
-    const index = jugadores.findIndex(x => id == x.id);
 
-    if (index > -1) {
-        jugadores.splice(index, 1);
-        return resp.status(200).json({ message: "Registro de jugador eliminado." })
-    } else {
-        return resp.status(500).json({ error: "No se encontró al jugador." })
+    try {
+        await prisma.player.delete({
+            where : {
+                id : id
+            }
+        })
+        return resp.json({
+            msg : "OK"
+        })
+    }catch (e) {
+        return resp.status(400).json({
+            error : "Id incorrecto"
+        })
     }
 })
 
