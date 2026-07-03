@@ -16,13 +16,21 @@ model Player {
   id Int @id @default(autoincrement())
   name String
   age Int
-  nat String
   position String
   height Int
   weight Int
   club String?   
   active Boolean @default(true)
+  nationalityId Int
+  nat Nationality @relation(fields: [nationalityId], references: [id])
   attributes PlayerAttributes?
+}
+
+model Nationality {
+  id Int @id @default(autoincrement())
+  nombre String
+  nombreCorto String
+  players Player[]
 }
 
 model PlayerAttributes {
@@ -35,3 +43,5 @@ model PlayerAttributes {
   playerId Int @unique
   player Player @relation(fields: [playerId], references: [id])
 }
+
+
