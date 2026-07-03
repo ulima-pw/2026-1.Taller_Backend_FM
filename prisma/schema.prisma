@@ -16,7 +16,6 @@ model Player {
   id Int @id @default(autoincrement())
   name String
   age Int
-  position String
   height Int
   weight Int
   club String?   

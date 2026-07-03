@@ -1,7 +1,7 @@
 GET http://localhost:5000/api/players
 
 ###
-GET http://localhost:5000/api/players/5
+GET http://localhost:5000/api/players/3
 
 ###
 POST http://localhost:5000/api/players
@@ -10,8 +10,8 @@ Content-Type: application/json
 {
     "name":"Frank Ribery",
     "age":30,
-    "nat":"FRA",
-    "position":"Volante",
+    "nationalityId":1,
+    "positions":[{"id" : 2}, {"id" : 3}],
     "height":178,
     "weight":73,
     "pac":20,
@@ -22,15 +22,15 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:5000/api/players/2
+PUT http://localhost:5000/api/players/3
 Content-Type: application/json
 
 {
-    "id": 2,
+    "id": 3,
     "name":"Sergio Agüero",
     "age":30,
-    "nat":"FRA",
-    "position":"Volante",
+    "nationalityId":2,
+    "positions": [{"id" : 2}],
     "height":178,
     "weight":73,
     "pac":20,

@@ -48,7 +48,9 @@ app.get("/api/players", async (req, resp) => {
             active : true
         },
         include : {
-            attributes : true
+            attributes : true,
+            nat : true,
+            positions : true
         }
     })
     resp.json(players)
@@ -69,7 +71,9 @@ app.get("/api/players/:id", async (req, resp) => {
             id : parseInt(id)
         },
         include : {
-            attributes : true
+            attributes : true,
+            nat : true,
+            positions : true
         }
     })
 
@@ -93,11 +97,13 @@ app.post("/api/players", async (req, resp) => {
                 data : {
                     name : object.name,
                     age : object.age,
-                    nat : object.nat,
-                    position : object.position,
+                    nationalityId: object.nationalityId,
                     height : object.height,
                     weight : object.weight,
-                    club : object.club 
+                    club : object.club ,
+                    positions : {
+                        connect : object.positions
+                    }
                 }
             })
             await prisma.playerAttributes.create({
@@ -113,7 +119,7 @@ app.post("/api/players", async (req, resp) => {
             resp.json(player)
         }catch(e){
             return resp.status(400).json({
-                error : e
+                error : e.message
             })
         }
         
@@ -137,14 +143,15 @@ app.put("/api/players/:id", async (req, resp) => {
                 }, data : {
                     name : object.name,
                     age : object.age,
-                    nat : object.nat,
-                    position : object.position,
+                    nationalityId : object.nationalityId,
                     height : object.height,
-                    weight : object.weight
+                    weight : object.weight,
+                    positions : {
+                        set : object.positions
+                    }
                 }
             })
 
-            console.log(player)
 
             await prisma.playerAttributes.update({
                 where : {
