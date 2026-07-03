@@ -24,12 +24,19 @@ model Player {
   nationalityId Int
   nat Nationality @relation(fields: [nationalityId], references: [id])
   attributes PlayerAttributes?
+  positions Position[] @relation("PositionPlayer")
+}
+
+model Position {
+  id Int @id @default(autoincrement())
+  name String
+  players Player[] @relation("PositionPlayer")
 }
 
 model Nationality {
   id Int @id @default(autoincrement())
-  nombre String
-  nombreCorto String
+  name String
+  shortName String
   players Player[]
 }
 
@@ -43,5 +50,4 @@ model PlayerAttributes {
   playerId Int @unique
   player Player @relation(fields: [playerId], references: [id])
 }
-
 
